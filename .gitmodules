@@ -1,0 +1,3 @@
+[submodule "game/lib/matter-js"]
+	path = game/lib/matter-js
+	url = https://github.com/liabru/matter-js
