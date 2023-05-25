@@ -25,8 +25,13 @@ base.attach(leftWheel,25,-15,0,0,0)
 let rightWheel = new Wheel(15)
 base.attach(rightWheel,-25,-15,0,0,0)
 
-world.addRobot(robot)
+let topRect = new Rect(100,6)
+base.attach(topRect,70,30,-10,0,20 * Math.PI/180)
 
+let topRect2 = new Rect(100,6)
+base.attach(topRect2,-70,30,10,0,(360-20) * Math.PI/180)
+
+world.addRobot(robot)
 
 
 // var boxB = Matter.Bodies.rectangle(450, 50, 80, 80);
@@ -34,5 +39,6 @@ world.addRobot(robot)
 
 
 // START SIM
+// setInterval(()=>world.tick(),10)
 setInterval(()=>world.tick(),16)
 setInterval(()=>renderer.redraw(),1)

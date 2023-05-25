@@ -23,6 +23,7 @@ class Robot {
         // add to composite, which adds to world.
         let toAdd = [component.body]
         if(component.constraint) {toAdd.push(component.constraint)}
+        if(component.constraint2) {toAdd.push(component.constraint2)}
         Matter.Composite.add(this.composite,toAdd)
         this.parts.push(component);
         component.robot = this;

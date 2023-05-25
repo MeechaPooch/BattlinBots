@@ -1,9 +1,9 @@
 // if they get hit hard enough, parts can fall off
 
 class Component {
-    static NO_COLLIDE = {group:-1, category: 0b000,mask:0b000}
-    static BOT_COMPONENT = {group:-2, category: 0b010,mask:0b100}
-    static GAME_COMPONENT = {group:1, category: 0b100,mask:0b110}
+    static NO_COLLIDE = {group:0, category: 0b000,mask:0b000}
+    static BOT_COMPONENT = {group:0, category: 0b010,mask:0b100}
+    static GAME_COMPONENT = {group:0, category: 0b100,mask:0b110}
 
     body; constraint; 
     composite;
@@ -12,7 +12,9 @@ class Component {
     parentAnchorX;
     parentAnchorY;
     parentAnchorRotation;
-    offsetX = 0; offsetY = 0;
+
+    OFFSET = {x:0,y:0}
+    FREE_JOINT = false;
 
     children = [];
 
@@ -22,21 +24,40 @@ class Component {
         this.body.collisionFilter = Component.BOT_COMPONENT  
     }
 
+
+    // can attach out of range! (make sure to draw these connections in the future!)
+    // rot in rad
     attach(component, anchorX, anchorY, offsetX, offsetY, rot) {
         component.parent = this;
         component.parentAnchorX = anchorX;
         component.parentAnchorY = anchorY;
-        component.offsetX = offsetX;
-        component.offsetY = offsetY;
+        // component.offsetX = offsetX;
+        // component.offsetY = offsetY;
 
         component.constraint = Matter.Constraint.create({
             bodyA: this.body,
             bodyB: component.body,
-            // damping: .1,
+            damping: .5,
             stiffness:1,
             length: 0,
-            pointA:{x:anchorX, y:anchorY}
+            pointA: {x:anchorX, y:anchorY}, // in relation to body A
+            pointB: {x:component.OFFSET.x + offsetX, y:component.OFFSET.y + offsetY} // in relation to body B
         })
+
+        if(!component.FREE_JOINT) {
+            const SECOND_CONST_DIST = 20
+
+            component.constraint2 = Matter.Constraint.create({
+                bodyA: this.body,
+                bodyB: component.body,
+                damping: .5,
+                stiffness:1,
+                length: 0,
+                pointA: {x:anchorX + 10*Math.cos(rot), y:anchorY + 10*Math.sin(rot)}, // in relation to body A
+                pointB: {x:component.OFFSET.x +offsetX +10,y:component.OFFSET.y + offsetY} // in relation to body B
+            })
+        }
+
         // Matter.Body.setVelocity(component.body, {x:10,y:1})
 
         // composite
@@ -92,6 +113,7 @@ class RobotComponent extends Component {
 
 class Wheel extends RobotComponent {
     radius;
+    FREE_JOINT = true;
 
     // place a default motor if you put wheel on point that does not have motor
     // when placing wheel, snap to nearby free motors
@@ -138,5 +160,12 @@ class Rect extends RobotComponent {
         pen.fillRect(-this.width/2,-this.height/2,this.width,this.height)
         pen.strokeRect(-this.width/2,-this.height/2,this.width,this.height)
         super.drawMe(pen)
+    }
+}
+
+class ClearRect extends Rect {
+    constructor(w,h){
+        super(w,h)
+        this.body.filter = Component.NO_COLLIDE
     }
 }

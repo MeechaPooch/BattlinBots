@@ -19,6 +19,9 @@ class World {
     setupPhysics() {
         this.engine = Matter.Engine.create()
         this.engine.gravity.y = -1;
+        this.engine.constraintIterations = 10
+        this.engine.velocityIterations = 10
+        this.engine.positionIterations = 10
         
     }
 
@@ -33,7 +36,7 @@ class World {
 
 
     tick() {
-        let timeSinceLastTick = Math.min((Date.now() - this.lastTickStart),50) // cap time multiplier at 1000 millis
+        let timeSinceLastTick = Math.min((Date.now() - this.lastTickStart),1000) // cap time multiplier at 1000 millis
         this.lastTickStart = Date.now()
         // console.log(timeSinceLastTick)
         Matter.Engine.update(this.engine,timeSinceLastTick)
