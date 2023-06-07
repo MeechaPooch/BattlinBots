@@ -1,0 +1,13 @@
+types of bodies:
+
+wheel
+rect/poly
+bar
+
+motor
+bearing
+
+how to decide if its a stiff or rotate joint:
+wheels place motor and rotate 
+anything attached to a motor or bearing rotates
+otherwise it is stiff

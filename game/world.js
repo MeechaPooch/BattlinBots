@@ -9,11 +9,21 @@ class World {
 
     setup() {
         this.setupPhysics()
-        let ground = Matter.Bodies.rectangle(0,-100,1000,100,{isStatic:true})   
+        // let ground = Matter.Bodies.rectangle(0,-100,1000,100,{isStatic:true})   
+        let ground = new GroundRect(1000,100);
+
         console.log(ground)
         ground.collisionFilter = Component.GAME_COMPONENT
         this.levelComponents.push(ground)
         Matter.Composite.add(this.engine.world,ground)
+    }
+
+    addStatic(component, x, y, rot) {
+        component.body.position.x = x;
+        component.body.position.y = y;
+        component.body.angle = rot;
+        Matter.Body.setStatic(component.body,true);
+        Matter.Composite.add(this.engine.world,component)
     }
 
     setupPhysics() {

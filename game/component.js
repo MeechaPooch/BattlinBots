@@ -1,6 +1,7 @@
 // if they get hit hard enough, parts can fall off
 
 class Component {
+    static LEVEL = {group:0, category:0b001,mask:0b111}
     static NO_COLLIDE = {group:0, category: 0b000,mask:0b000}
     static BOT_COMPONENT = {group:0, category: 0b010,mask:0b100}
     static GAME_COMPONENT = {group:0, category: 0b100,mask:0b110}
@@ -57,6 +58,8 @@ class Component {
                 pointB: {x:component.OFFSET.x +offsetX +10,y:component.OFFSET.y + offsetY} // in relation to body B
             })
         }
+
+        component.body.angle = rot;
 
         // Matter.Body.setVelocity(component.body, {x:10,y:1})
 
@@ -143,14 +146,24 @@ class Wheel extends RobotComponent {
     }
 }
 
-class Rect extends RobotComponent {
+class ClearRect extends Rect {
+    constructor(w,h){
+        super(w,h)
+        this.body.filter = Component.NO_COLLIDE
+    }
+}
+
+
+///// LEVEL ////
+
+class LevelRect extends Component {
     width;height;
 
     constructor(width, height) {
         super(Matter.Bodies.rectangle(0,0, width, height))  
         this.width = width;
         this.height = height;
-        this.body.filter = Component.BOT_COMPONENT
+        this.body.filter = Component.LEVEL
     }
 
     drawMe(pen) {
@@ -160,12 +173,5 @@ class Rect extends RobotComponent {
         pen.fillRect(-this.width/2,-this.height/2,this.width,this.height)
         pen.strokeRect(-this.width/2,-this.height/2,this.width,this.height)
         super.drawMe(pen)
-    }
-}
-
-class ClearRect extends Rect {
-    constructor(w,h){
-        super(w,h)
-        this.body.filter = Component.NO_COLLIDE
     }
 }

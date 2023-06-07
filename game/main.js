@@ -26,9 +26,10 @@ let rightWheel = new Wheel(15)
 base.attach(rightWheel,-25,-15,0,0,0)
 
 let topRect = new Rect(100,6)
-base.attach(topRect,70,30,-10,0,20 * Math.PI/180)
+base.attach(topRect,30,30,-10,0,20 * Math.PI/180)
 
 let topRect2 = new Rect(100,6)
+// component, anchorX, anchorY, offsetX, offsetY, rot
 base.attach(topRect2,-70,30,10,0,(360-20) * Math.PI/180)
 
 world.addRobot(robot)
